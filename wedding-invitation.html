@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>You're Invited — W &amp; M</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blush-1:#fbe9ea;
+    --blush-2:#f3d2d6;
+    --rose-deep:#c98a93;
+    --rose-line:#d9a5ac;
+    --gold:#c9a15a;
+    --gold-soft:#e6c88a;
+    --ink:#5a2c35;
+    --ink-soft:#8a5560;
+    --cream:#fffaf5;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    width:100%; min-height:100%;
+    background:
+      radial-gradient(120% 90% at 50% 0%, var(--blush-1) 0%, var(--blush-2) 55%, #ecc3ca 100%);
+    font-family:'Montserrat', sans-serif;
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+
+  .stage{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+
+  /* ---------- Ambient petals ---------- */
+  .petal-field{
+    position:fixed; inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:2;
+  }
+  .petal{
+    position:absolute;
+    top:-40px;
+    width:14px; height:14px;
+    background: radial-gradient(circle at 30% 30%, var(--gold-soft), var(--rose-deep) 70%);
+    border-radius: 60% 40% 65% 35% / 55% 45% 55% 45%;
+    opacity:0.75;
+    animation-name: fall, sway;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    will-change: transform;
+  }
+  @keyframes fall{
+    from{ transform: translateY(-5vh) rotate(0deg); }
+    to{ transform: translateY(105vh) rotate(340deg); }
+  }
+  @keyframes sway{
+    0%,100%{ margin-left:0px; }
+    50%{ margin-left:38px; }
+  }
+
+  /* ================= ENVELOPE ================= */
+  .envelope-wrap{
+    position:relative;
+    width:min(88vw, 360px);
+    aspect-ratio: 3 / 2;
+    z-index:5;
+    cursor:pointer;
+    -webkit-tap-highlight-color: transparent;
+    perspective: 1400px;
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .envelope-wrap.hidden-away{
+    opacity:0;
+    transform: scale(.85) translateY(-10px);
+    pointer-events:none;
+  }
+
+  .envelope-label{
+    position:absolute;
+    left:50%;
+    bottom:-52px;
+    transform:translateX(-50%);
+    white-space:nowrap;
+    font-family:'Montserrat',sans-serif;
+    font-size:12px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    color: var(--ink-soft);
+    animation: pulseText 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseText{
+    0%,100%{ opacity:.55; letter-spacing:4px;}
+    50%{ opacity:1; letter-spacing:5px;}
+  }
+
+  .envelope{
+    position:absolute; inset:0;
+    border-radius: 6px;
+    background: linear-gradient(180deg, var(--cream), #fdf3ea);
+    box-shadow:
+      0 18px 40px -12px rgba(90,44,53,0.35),
+      0 2px 0 rgba(255,255,255,0.6) inset;
+  }
+  .envelope::before{ /* bottom triangle body shading */
+    content:"";
+    position:absolute; inset:0;
+    border-radius:6px;
+    background: linear-gradient(135deg, rgba(201,161,90,0.08), rgba(201,161,90,0) 40%);
+  }
+  .envelope-inner-shadow{
+    position:absolute; left:6%; right:6%; bottom:6%; top:38%;
+    background: linear-gradient(180deg, rgba(216,167,175,0.25), rgba(216,167,175,0));
+    border-radius: 4px;
+  }
+
+  .flap{
+    position:absolute;
+    top:0; left:0; right:0;
+    height:60%;
+    background: linear-gradient(160deg, #fdf1e4, var(--blush-2));
+    clip-path: polygon(0 0, 100% 0, 50% 88%);
+    transform-origin: top center;
+    transform: rotateX(0deg);
+    transition: transform 1s cubic-bezier(.7,0,.2,1);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset;
+    z-index:3;
+  }
+  .envelope-wrap.open .flap{
+    transform: rotateX(180deg);
+  }
+
+  .seal{
+    position:absolute;
+    left:50%; top:44%;
+    transform: translate(-50%,-50%);
+    width:58px; height:58px;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #dcb471, var(--gold) 55%, #a67c3e 100%);
+    box-shadow: 0 6px 14px rgba(120,80,20,0.45), 0 0 0 2px rgba(255,255,255,0.15) inset;
+    display:flex; align-items:center; justify-content:center;
+    z-index:4;
+    transition: transform .5s ease .15s, opacity .5s ease .15s;
+  }
+  .seal span{
+    font-family:'Great Vibes', cursive;
+    font-size:26px;
+    color:#fff6e6;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+  }
+  .envelope-wrap.open .seal{
+    transform: translate(-50%,-50%) scale(0.4) rotate(25deg);
+    opacity:0;
+  }
+
+  .card-peek{
+    position:absolute;
+    left:6%; right:6%; bottom:6%; top:14%;
+    background: var(--cream);
+    border-radius:3px;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+    transform: translateY(6%);
+    transition: transform .8s cubic-bezier(.2,.9,.3,1) .35s;
+    z-index:2;
+  }
+  .envelope-wrap.open .card-peek{
+    transform: translateY(-46%);
+  }
+
+  /* ================= INVITATION CARD ================= */
+  .invite-card{
+    position:relative;
+    width:min(90vw, 420px);
+    max-height: 88vh;
+    overflow-y:auto;
+    background: var(--cream);
+    border-radius: 4px;
+    padding: 46px 34px 38px;
+    text-align:center;
+    box-shadow:
+      0 30px 60px -20px rgba(90,44,53,0.4),
+      0 0 0 1px rgba(201,161,90,0.25);
+    opacity:0;
+    transform: translateY(28px) scale(.97);
+    transition: opacity 1s ease .2s, transform 1s cubic-bezier(.2,.85,.3,1) .2s;
+    z-index:6;
+  }
+  .invite-card.reveal{
+    opacity:1;
+    transform: translateY(0) scale(1);
+  }
+
+  .corner{
+    position:absolute; width:34px; height:34px;
+    border: 1.4px solid var(--gold);
+    opacity:0.8;
+  }
+  .corner.tl{ top:12px; left:12px; border-right:none; border-bottom:none; }
+  .corner.tr{ top:12px; right:12px; border-left:none; border-bottom:none; }
+  .corner.bl{ bottom:12px; left:12px; border-right:none; border-top:none; }
+  .corner.br{ bottom:12px; right:12px; border-left:none; border-top:none; }
+
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:3.5px;
+    text-transform:uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+
+  .flourish{
+    display:flex; align-items:center; justify-content:center;
+    gap:10px;
+    margin: 6px 0 22px;
+    color: var(--gold);
+  }
+  .flourish .line{
+    height:1px; width:46px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .flourish .line.right{ background: linear-gradient(90deg, var(--gold), transparent); }
+  .flourish svg{ width:16px; height:16px; }
+
+  .names{
+    font-family:'Great Vibes', cursive;
+    font-size: clamp(52px, 15vw, 68px);
+    line-height: 1;
+    color: var(--rose-deep);
+    background: linear-gradient(180deg, #d79aa1, var(--gold));
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 6px;
+  }
+
+  .quote{
+    font-family:'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height:1.6;
+    color: var(--ink);
+    margin: 22px auto 24px;
+    max-width: 300px;
+  }
+
+  .lede{
+    font-family:'Cormorant Garamond', serif;
+    font-size: 16.5px;
+    letter-spacing: 0.4px;
+    line-height:1.7;
+    color: var(--ink-soft);
+    margin: 0 0 26px;
+  }
+
+  .date-block{
+    margin: 0 0 6px;
+  }
+  .date-day{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size: 26px;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+  }
+  .date-sub{
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform:uppercase;
+    color: var(--gold);
+    margin-top:4px;
+  }
+
+  .venue{
+    font-family:'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight:500;
+    color: var(--rose-deep);
+    margin: 18px 0 28px;
+    letter-spacing:0.5px;
+  }
+
+  .closing{
+    font-family:'Great Vibes', cursive;
+    font-size: 24px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .petal{ animation: none; display:none; }
+    .flap, .seal, .card-peek, .invite-card, .envelope-wrap{ transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="petal-field" id="petalField" aria-hidden="true"></div>
+
+<div class="stage">
+
+  <div class="envelope-wrap" id="envelopeWrap" role="button" tabindex="0" aria-label="Tap to open your invitation">
+    <div class="envelope">
+      <div class="card-peek"></div>
+      <div class="flap"></div>
+      <div class="seal"><span>WM</span></div>
+    </div>
+    <div class="envelope-label">Tap to Open</div>
+  </div>
+
+  <div class="invite-card" id="inviteCard">
+    <span class="corner tl"></span>
+    <span class="corner tr"></span>
+    <span class="corner bl"></span>
+    <span class="corner br"></span>
+
+    <p class="eyebrow">Together With Their Families</p>
+
+    <div class="flourish" aria-hidden="true">
+      <span class="line"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 3c1.8 2 1.8 4-0.2 6 3-0.6 5 0.6 5 3-2-1.4-4-1.2-5 0.4 1 1.6-0.4 3.2-1.8 3.2s-2.8-1.6-1.8-3.2c-1-1.6-3-1.8-5-0.4 0-2.4 2-3.6 5-3C10.2 7 10.2 5 12 3z"/></svg>
+      <span class="line right"></span>
+    </div>
+
+    <h1 class="names">W &amp; M</h1>
+
+    <p class="quote">"In your eyes I found my home,<br>no more need for hearts to roam."</p>
+
+    <p class="lede">Request the honor of your presence<br>as they celebrate their engagement</p>
+
+    <div class="date-block">
+      <div class="date-day">Friday, 31 July 2026</div>
+      <div class="date-sub">Save the Date</div>
+    </div>
+
+    <div class="venue">Al&#8209;Zuraiqi</div>
+
+    <div class="flourish" aria-hidden="true">
+      <span class="line"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 3c1.8 2 1.8 4-0.2 6 3-0.6 5 0.6 5 3-2-1.4-4-1.2-5 0.4 1 1.6-0.4 3.2-1.8 3.2s-2.8-1.6-1.8-3.2c-1-1.6-3-1.8-5-0.4 0-2.4 2-3.6 5-3C10.2 7 10.2 5 12 3z"/></svg>
+      <span class="line right"></span>
+    </div>
+
+    <p class="closing">With love</p>
+  </div>
+
+</div>
+
+<script>
+  const wrap = document.getElementById('envelopeWrap');
+  const card = document.getElementById('inviteCard');
+  const petalField = document.getElementById('petalField');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function spawnPetals(count){
+    for(let i=0;i<count;i++){
+      const p = document.createElement('div');
+      p.className = 'petal';
+      const left = Math.random()*100;
+      const size = 8 + Math.random()*10;
+      const fallDur = 9 + Math.random()*8;
+      const swayDur = 3 + Math.random()*3;
+      const delay = Math.random()*10;
+      p.style.left = left + 'vw';
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      p.style.opacity = (0.5 + Math.random()*0.4).toFixed(2);
+      p.style.animationDuration = fallDur + 's, ' + swayDur + 's';
+      p.style.animationDelay = (-delay) + 's, ' + (-delay) + 's';
+      petalField.appendChild(p);
+    }
+  }
+
+  function openInvitation(){
+    if(wrap.classList.contains('open')) return;
+    wrap.classList.add('open');
+    if(!reduceMotion) spawnPetals(22);
+
+    setTimeout(()=>{
+      wrap.classList.add('hidden-away');
+      card.classList.add('reveal');
+    }, reduceMotion ? 0 : 900);
+  }
+
+  wrap.addEventListener('click', openInvitation);
+  wrap.addEventListener('keypress', (e)=>{
+    if(e.key === 'Enter' || e.key === ' ') openInvitation();
+  });
+
+  // a few gentle ambient petals from the start
+  spawnPetals(reduceMotion ? 0 : 6);
+</script>
+
+</body>
+</html>
